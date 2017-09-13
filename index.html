@@ -1,1 +1,41 @@
-hello world. My name is Oleg.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="messages"></ul>
+
+<form id="publish">
+    <input type="text" name="message">
+    <input type="submit" value="Send">
+</form>
+
+<script>
+    'use strict';
+    publish.onsubmit = function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/publish", true);
+        xhr.send(JSON.stringify({message: this.elements.message.value}));
+        this.elements.message.value = "";
+        return false;
+    };
+
+    subscribe();
+
+    function subscribe() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/subscribe", true);
+        xhr.onload = function () {
+            var li = document.createElement('li');
+            li.textContent = this.responseText;
+            messages.appendChild(li);
+            subscribe();
+        };
+        xhr.send();
+    }
+
+</script>
+</body>
+</html>
